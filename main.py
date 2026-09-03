@@ -53,8 +53,8 @@ def sql_fstring(username: str):
 def sql_format(email: str):
     db = get_db()
 
-    query = "SELECT * FROM users WHERE email = '{}'".format(email)
-    rows = db.execute(query).fetchall()
+    query = "SELECT * FROM users WHERE email = ?"
+    rows = db.execute(query, (email,)).fetchall()
 
     db.close()
     return {"users": rows}
