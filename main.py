@@ -68,8 +68,8 @@ def sql_format(email: str):
 def sql_percent(name: str):
     db = get_db()
 
-    query = "SELECT * FROM users WHERE name = '%s'" % name
-    rows = db.execute(query).fetchall()
+    query = "SELECT * FROM users WHERE name = ?"
+    rows = db.execute(query, (name,)).fetchall()
 
     db.close()
     return {"users": rows}
