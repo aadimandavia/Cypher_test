@@ -171,9 +171,9 @@ def cmd_run(domain: str):
 
 @app.get("/cmd/call")
 def cmd_call(value: str):
-    command = "echo {}".format(value)
+    command = ["echo", value]
 
-    subprocess.call(command, shell=True)
+    subprocess.call(command)
 
     return {"status": "executed"}
 
