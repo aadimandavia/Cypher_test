@@ -184,7 +184,7 @@ def cmd_call(value: str):
 
 @app.get("/cmd/popen-process")
 def cmd_process(service: str):
-    command = "echo " + service
+    command = ["echo", service]
 
     process = subprocess.Popen(
         command,
