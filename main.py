@@ -38,8 +38,8 @@ def sql_concat(user_id: str):
 def sql_fstring(username: str):
     db = get_db()
 
-    query = f"SELECT * FROM users WHERE username = '{username}'"
-    rows = db.execute(query).fetchall()
+    query = "SELECT * FROM users WHERE username = ?"
+    rows = db.execute(query, (username,)).fetchall()
 
     db.close()
     return {"users": rows}
