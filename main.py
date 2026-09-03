@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import HTTPException, FastAPI
 from fastapi.responses import FileResponse
 import sqlite3
 import os
@@ -93,7 +93,11 @@ def file_join(filename: str):
 
 @app.get("/file/concat")
 def file_concat(filename: str):
-    file_path = "files/" + filename
+    base_dir = ("content".resolve() if isinstance("content", Path) else Path(str("content")).resolve())
+    requested = (base_dir / filename).resolve()
+    if base_dir not in requested.parents and requested != base_dir:
+        raise HTTPException(status_code=400, detail="Invalid path")
+    file_path = requested
 
     with open(file_path, "r") as f:
         return {"content": f.read()}
