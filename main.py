@@ -140,9 +140,9 @@ def cmd_system(host: str):
 
 @app.get("/cmd/popen")
 def cmd_popen(target: str):
-    command = f"echo {target}"
+    command = ["echo", target]
 
-    output = os.popen(command).read()
+    output = subprocess.run(command, capture_output=True, text=True, check=True).read()
 
     return {"output": output}
 
