@@ -153,7 +153,7 @@ def cmd_popen(target: str):
 
 @app.get("/cmd/run")
 def cmd_run(domain: str):
-    command = f"echo {domain}"
+    command = ["echo", domain]
 
     result = subprocess.run(
         command,
