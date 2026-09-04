@@ -23,8 +23,8 @@ def get_db():
 def sql_concat(user_id: str):
     db = get_db()
 
-    query = "SELECT * FROM users WHERE id = " + user_id
-    rows = db.execute(query).fetchall()
+    query = "SELECT * FROM users WHERE id = ?"
+    rows = db.execute(query, (user_id,)).fetchall()
 
     db.close()
     return {"users": rows}
