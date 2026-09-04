@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import HTTPException, FastAPI
 from fastapi.responses import FileResponse
 import sqlite3
 import os
@@ -116,7 +116,11 @@ def file_pathlib(filename: str):
 
 @app.get("/file/download")
 def file_download(filename: str):
-    file_path = os.path.join("files", filename)
+    base_dir = ("files".resolve() if isinstance("files", Path) else Path(str("files")).resolve())
+    requested = (base_dir / filename).resolve()
+    if base_dir not in requested.parents and requested != base_dir:
+        raise HTTPException(status_code=400, detail="Invalid path")
+    file_path = requested
 
     return FileResponse(file_path)
 
