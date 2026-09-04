@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import HTTPException, FastAPI
 from fastapi.responses import FileResponse
 import sqlite3
 import os
@@ -105,7 +105,11 @@ def file_concat(filename: str):
 
 @app.get("/file/pathlib")
 def file_pathlib(filename: str):
-    file_path = BASE_DIR / filename
+    base_dir = (BASE_DIR.resolve() if isinstance(BASE_DIR, Path) else Path(str(BASE_DIR)).resolve())
+    requested = (base_dir / filename).resolve()
+    if base_dir not in requested.parents and requested != base_dir:
+        raise HTTPException(status_code=400, detail="Invalid path")
+    file_path = requested
 
     return {"content": file_path.read_text()}
 
