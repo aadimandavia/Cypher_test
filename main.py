@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import HTTPException, FastAPI
 from fastapi.responses import FileResponse
 import sqlite3
 import os
@@ -81,7 +81,11 @@ def sql_percent(name: str):
 
 @app.get("/file/join")
 def file_join(filename: str):
-    file_path = os.path.join(BASE_DIR, filename)
+    base_dir = (BASE_DIR.resolve() if isinstance(BASE_DIR, Path) else Path(str(BASE_DIR)).resolve())
+    requested = (base_dir / filename).resolve()
+    if base_dir not in requested.parents and requested != base_dir:
+        raise HTTPException(status_code=400, detail="Invalid path")
+    file_path = requested
 
     with open(file_path, "r") as f:
         return {"content": f.read()}
